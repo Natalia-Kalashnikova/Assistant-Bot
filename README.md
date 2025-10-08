@@ -8,6 +8,10 @@ This address book is automatically saved to disk when you exit the program and r
 
 ---
 
+## Project structure
+
+---
+
 ## 💾 Data Persistence
 
 - All your contacts and their data are automatically saved to a file (addressbook.pkl) when you exit the program.
