@@ -7,12 +7,28 @@ New functionality includes birthday management and upcoming birthday queries.
 from models.record import Record
 from models.addressbook import AddressBook
 from storage import save_data, load_data
+from views import ConsoleView, AbstractView
+
+COMMANDS_DESCRIPTION = {
+    "add [name] [phone]": "Add a new contact or phone to existing contact",
+    "change [name] [old_phone] [new_phone]": "Change existing contact's phone",
+    "phone [name]": "Show contact's phone number(s)",
+    "all": "Show all contacts",
+    "add-birthday [name] [DD.MM.YYYY]": "Add birthday to a contact in format DD.MM.YYYY",
+    "show-birthday [name]": "Show birthday for a contact",
+    "birthdays": "Show contacts with birthdays in the next 7 days (with greeting date, moved to Monday if on weekend)",
+    "hello": "Greet the assistant",
+    "help": "Show this help message",
+    "exit/close": "Exit the program",
+}
+
 
 def input_error(func):
     """
     Decorator for handling errors in command handlers.
     Returns user-friendly error messages for common exceptions.
     """
+
     def wrapper(*args, **kwargs):
         try:
             return func(*args, **kwargs)
@@ -22,7 +38,9 @@ def input_error(func):
             return "Error: Contact not found."
         except ValueError as e:
             return f"Error: {e}"
+
     return wrapper
+
 
 def parse_input(user_input: str) -> tuple:
     """
@@ -34,8 +52,9 @@ def parse_input(user_input: str) -> tuple:
     """
     parts = user_input.strip().split()
     if not parts:
-        return '', []
+        return "", []
     return parts[0].lower(), parts[1:]
+
 
 @input_error
 def add_contact(args, book: AddressBook) -> str:
@@ -58,6 +77,7 @@ def add_contact(args, book: AddressBook) -> str:
         record.add_phone(phone)
     return message
 
+
 @input_error
 def change_contact(args, book: AddressBook) -> str:
     """
@@ -75,6 +95,7 @@ def change_contact(args, book: AddressBook) -> str:
     record.edit_phone(old_phone, new_phone)
     return "Phone updated."
 
+
 @input_error
 def show_phone(args, book: AddressBook) -> str:
     """
@@ -91,7 +112,8 @@ def show_phone(args, book: AddressBook) -> str:
         return "Contact not found."
     if not record.phones:
         return "No phones for this contact."
-    return f"Phones for {name}: " + ', '.join(p.value for p in record.phones)
+    return f"Phones for {name}: " + ", ".join(p.value for p in record.phones)
+
 
 def show_all_contacts(book: AddressBook) -> str:
     """
@@ -102,6 +124,7 @@ def show_all_contacts(book: AddressBook) -> str:
         str: List of all contacts.
     """
     return str(book)
+
 
 @input_error
 def add_birthday(args, book: AddressBook) -> str:
@@ -119,6 +142,7 @@ def add_birthday(args, book: AddressBook) -> str:
         return "Contact not found."
     record.add_birthday(birthday_str)
     return "Birthday added."
+
 
 @input_error
 def show_birthday(args, book: AddressBook) -> str:
@@ -138,6 +162,7 @@ def show_birthday(args, book: AddressBook) -> str:
         return "No birthday for this contact."
     return f"Birthday for {name}: {record.birthday}"
 
+
 @input_error
 def birthdays(_args, book: AddressBook) -> str:
     """
@@ -153,8 +178,11 @@ def birthdays(_args, book: AddressBook) -> str:
         return "No upcoming birthdays."
     result = []
     for item in upcoming:
-        result.append(f"{item['name']}: birthday {item['birthday']}, greet on {item['greet_date']}")
+        result.append(
+            f"{item['name']}: birthday {item['birthday']}, greet on {item['greet_date']}"
+        )
     return "\n".join(result)
+
 
 def print_help():
     """
@@ -173,6 +201,7 @@ def print_help():
         "help - Show this help message\n"
         "exit or close - Exit the program"
     )
+
 
 def main():
     """
@@ -225,6 +254,7 @@ def main():
 
         else:
             print("Unknown command. Please try again.")
+
 
 if __name__ == "__main__":
     main()
