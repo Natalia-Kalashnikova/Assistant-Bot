@@ -30,14 +30,16 @@ def input_error(func):
     """
 
     def wrapper(*args, **kwargs):
+        view = args[-1]
         try:
             return func(*args, **kwargs)
         except IndexError:
-            return "Error: Not enough arguments."
+            view.display_message("Error: Not enough arguments.")
         except KeyError:
-            return "Error: Contact not found."
+            view.display_message("Error: Contact not found.")
         except ValueError as e:
-            return f"Error: {e}"
+            view.display_message(f"Error: {e}")
+        return
 
     return wrapper
 
