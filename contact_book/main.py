@@ -59,7 +59,7 @@ def parse_input(user_input: str) -> tuple:
 
 
 @input_error
-def add_contact(args, book: AddressBook) -> str:
+def add_contact(args, book: AddressBook, view: AbstractView) -> None:
     """
     Adds a new contact or phone to existing contact.
     Args:
@@ -77,11 +77,11 @@ def add_contact(args, book: AddressBook) -> str:
         message = "Contact added."
     if phone:
         record.add_phone(phone)
-    return message
+    view.display_message(message)
 
 
 @input_error
-def change_contact(args, book: AddressBook) -> str:
+def change_contact(args, book: AddressBook, view: AbstractView) -> None:
     """
     Changes existing contact's phone number.
     Args:
@@ -93,13 +93,14 @@ def change_contact(args, book: AddressBook) -> str:
     name, old_phone, new_phone, *_ = args
     record = book.find(name)
     if record is None:
-        return "Contact not found."
+        view.display_message("Error: Contact not found.")
+        return
     record.edit_phone(old_phone, new_phone)
-    return "Phone updated."
+    view.display_message("Phone updated.")
 
 
 @input_error
-def show_phone(args, book: AddressBook) -> str:
+def show_phone(args, book: AddressBook, view: AbstractView) -> None:
     """
     Shows phone numbers for a contact.
     Args:
@@ -111,13 +112,17 @@ def show_phone(args, book: AddressBook) -> str:
     name, *_ = args
     record = book.find(name)
     if record is None:
-        return "Contact not found."
+        view.display_message("Error: Contact not found.")
+        return
     if not record.phones:
-        return "No phones for this contact."
-    return f"Phones for {name}: " + ", ".join(p.value for p in record.phones)
+        view.display_message("No phones for this contact.")
+        return
+    view.display_message(
+        f"Phones for {name}: " + ", ".join(p.value for p in record.phones)
+    )
 
 
-def show_all_contacts(book: AddressBook) -> str:
+def show_all_contacts(book: AddressBook, view: AbstractView) -> None:
     """
     Returns a string with all contacts.
     Args:
@@ -125,11 +130,11 @@ def show_all_contacts(book: AddressBook) -> str:
     Returns:
         str: List of all contacts.
     """
-    return str(book)
+    view.display_all_contacts(book)
 
 
 @input_error
-def add_birthday(args, book: AddressBook) -> str:
+def add_birthday(args, book: AddressBook, view: AbstractView) -> None:
     """
     Adds a birthday to a contact.
     Args:
@@ -141,13 +146,14 @@ def add_birthday(args, book: AddressBook) -> str:
     name, birthday_str, *_ = args
     record = book.find(name)
     if record is None:
-        return "Contact not found."
+        view.display_message("Error: Contact not found.")
+        return
     record.add_birthday(birthday_str)
-    return "Birthday added."
+    view.display_message("Birthday added.")
 
 
 @input_error
-def show_birthday(args, book: AddressBook) -> str:
+def show_birthday(args, book: AddressBook, view: AbstractView) -> None:
     """
     Shows birthday for a contact.
     Args:
@@ -159,50 +165,28 @@ def show_birthday(args, book: AddressBook) -> str:
     name, *_ = args
     record = book.find(name)
     if record is None:
-        return "Contact not found."
+        view.display_message("Error: Contact not found.")
+        return
     if record.birthday is None:
-        return "No birthday for this contact."
-    return f"Birthday for {name}: {record.birthday}"
+        view.display_message("No birthday for this contact.")
+        return
+    view.display_message(f"Birthday for {name}: {record.birthday}")
 
 
 @input_error
-def birthdays(_args, book: AddressBook) -> str:
+def birthdays(_args, book: AddressBook, view: AbstractView) -> None:
     """
     Shows contacts with birthdays in the next 7 days.
-    Args:
-        args (list): not used
-        book (AddressBook): AddressBook instance.
-    Returns:
-        str: List of contacts with upcoming birthdays.
     """
     upcoming = book.get_upcoming_birthdays()
-    if not upcoming:
-        return "No upcoming birthdays."
-    result = []
-    for item in upcoming:
-        result.append(
-            f"{item['name']}: birthday {item['birthday']}, greet on {item['greet_date']}"
-        )
-    return "\n".join(result)
+    view.display_upcoming_birthdays(upcoming)
 
 
-def print_help():
+def print_help(view: AbstractView):
     """
-    Prints the help message with all supported commands.
+    Prints the help message with all supported commands using the view.
     """
-    print(
-        "Commands:\n"
-        "add username phone - Add a new contact or phone to existing contact\n"
-        "change username old_phone new_phone - Change existing contact's phone\n"
-        "phone username - Show contact's phone number(s)\n"
-        "all - Show all contacts\n"
-        "add-birthday username DD.MM.YYYY - Add birthday to a contact in format DD.MM.YYYY\n"
-        "show-birthday username - Show birthday for a contact\n"
-        "birthdays - Show contacts with birthdays in the next 7 days (with greeting date, moved to Monday if on weekend)\n"
-        "hello - Greet the assistant\n"
-        "help - Show this help message\n"
-        "exit or close - Exit the program"
-    )
+    view.display_help(COMMANDS_DESCRIPTION)
 
 
 def main():
