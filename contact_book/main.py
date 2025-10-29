@@ -196,8 +196,9 @@ def main():
     Loads AddressBook from disk at startup and saves it at exit.
     """
     book = load_data()
-    print("Welcome to the contact assistant!")
-    print("Type 'help' for commands, 'exit' or 'close' to quit.")
+    view = ConsoleView()
+    view.display_message("Welcome to the contact assistant! 👋")
+    view.display_message("Type 'help' for commands, 'exit' or 'close' to quit.")
 
     while True:
         user_input = input(">>> ").strip()
@@ -208,38 +209,38 @@ def main():
 
         if command in ["exit", "close"]:
             save_data(book)
-            print("Good bye!")
+            view.display_message("Good bye! 👋")
             break
 
         elif command == "hello":
-            print("How can I help you?")
+            view.display_message("How can I help you?")
 
         elif command == "add":
-            print(add_contact(args, book))
+            add_contact(args, book, view)
 
         elif command == "change":
-            print(change_contact(args, book))
+            change_contact(args, book, view)
 
         elif command == "phone":
-            print(show_phone(args, book))
+            show_phone(args, book, view)
 
         elif command == "all":
-            print(show_all_contacts(book))
+            show_all_contacts(book, view)
 
         elif command == "add-birthday":
-            print(add_birthday(args, book))
+            add_birthday(args, book, view)
 
         elif command == "show-birthday":
-            print(show_birthday(args, book))
+            show_birthday(args, book, view)
 
         elif command == "birthdays":
-            print(birthdays(args, book))
+            birthdays(args, book, view)
 
         elif command == "help":
-            print_help()
+            print_help(view)
 
         else:
-            print("Unknown command. Please try again.")
+            view.display_message("Unknown command. Please try again.")
 
 
 if __name__ == "__main__":
