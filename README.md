@@ -60,3 +60,59 @@ exit
 - Clone this repository.
 - Run python3 main.py from the contact_book directory.
 - Start managing your contacts — your data will always be there next time!
+
+## UML Class Diagram
+
+This is a UML class diagram. It illustrates the structure of classes, their attributes, and methods of interconnection.
+
+```mermaid
+classDiagram
+    class Field {
+        #value: Any
+        +__init__(value)
+        +__str__()
+    }
+
+    class Name {
+        +__init__(value)
+    }
+    class Phone {
+        +__init__(value)
+    }
+    class Birthday {
+        +__init__(value)
+    }
+
+    Field <|-- Name : inheritance
+    Field <|-- Phone : inheritance
+    Field <|-- Birthday : inheritance
+
+    class Record {
+        -name: Name
+        -phones: List~Phone~
+        #birthday: Birthday
+        +__init__(name)
+        +add_phone(phone_number)
+        +remove_phone(phone_number)
+        +edit_phone(old_number, new_number)
+        +find_phone(phone_number)
+        +add_birthday(birthday_str)
+        +__str__()
+    }
+
+    Record "1" *-- "1" Name : composition
+    Record "1" *-- "0..*" Phone : composition
+    Record "1" *-- "0..1" Birthday : composition
+
+    class AddressBook {
+        +data: Dict~str, Record~
+        +add_record(record)
+        +find(name)
+        +delete(name)
+        +adjust_for_weekend(birthday)
+        +get_upcoming_birthdays()
+        +__str__()
+    }
+
+    AddressBook "1" o-- "0..*" Record : aggregation
+```
