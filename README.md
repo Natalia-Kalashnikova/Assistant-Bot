@@ -57,9 +57,26 @@ exit
 
 ## 🚀 Quick Start
 
-- Clone this repository.
-- Run python3 main.py from the contact_book directory.
-- Start managing your contacts — your data will always be there next time!
+### 📦 Installation
+
+1.  **Clone the repository:**
+    ```bash
+    git clone git@github.com:Natalia-Kalashnikova/Assistant-Bot
+    cd Assistant-Bot
+    ```
+2.  **Install dependencies using Poetry:**
+    ```bash
+    poetry install
+    ```
+
+### 🏃 Usage
+
+To run the console assistant bot:
+```bash
+poetry run python contact_book/main.py
+```
+
+---
 
 ## UML Class Diagram
 
