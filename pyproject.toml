@@ -17,3 +17,6 @@ build-backend = "poetry.core.masonry.api"
 packages = [
     {include = "contact_book"}
 ]
+
+[tool.poetry.scripts]
+assistant-bot = "contact_book.main:main"

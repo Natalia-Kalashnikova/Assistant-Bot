@@ -4,10 +4,10 @@ All data is managed via AddressBook and Record classes.
 New functionality includes birthday management and upcoming birthday queries.
 """
 
-from models.record import Record
-from models.addressbook import AddressBook
-from storage import save_data, load_data
-from views import ConsoleView, AbstractView
+from contact_book.models.record import Record
+from contact_book.models.addressbook import AddressBook
+from contact_book.storage import save_data, load_data
+from contact_book.views import ConsoleView, AbstractView
 
 COMMANDS_DESCRIPTION = {
     "add [name] [phone]": "Add a new contact or phone to existing contact",

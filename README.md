@@ -72,8 +72,9 @@ exit
 ### 🏃 Usage
 
 To run the console assistant bot:
+
 ```bash
-poetry run python contact_book/main.py
+poetry run assistant-bot
 ```
 
 ---

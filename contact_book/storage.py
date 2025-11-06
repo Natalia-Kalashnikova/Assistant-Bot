@@ -5,7 +5,7 @@ using pickle serialization to persist data between sessions.
 import pickle
 
 # Assuming AddressBook is imported correctly from its path
-from models.addressbook import AddressBook
+from .models.addressbook import AddressBook
 
 # Constant with an explicitly defined path to the data file inside the contact_book folder
 DEFAULT_FILENAME = "contact_book/addressbook.pkl"
